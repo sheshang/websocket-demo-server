@@ -1,5 +1,6 @@
 package com.codeforgeyt.wschatapplication.handler;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -10,11 +11,15 @@ import java.util.List;
 
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
+    @Autowired
+    RestSocketHandler getRestSocketHandler;
+
     private final List<WebSocketSession> webSocketSessions = new ArrayList<>();
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(WebSocketSession session) {
         webSocketSessions.add(session);
+        this.getRestSocketHandler.getWebSocketSessions().add(session);
     }
 
     @Override
@@ -25,7 +30,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         webSocketSessions.remove(session);
+        this.getRestSocketHandler.getWebSocketSessions().remove(session);
     }
 }
