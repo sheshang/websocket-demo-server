@@ -19,9 +19,11 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
         webSocketHandlerRegistry
-                .addHandler(getChatWebSocketHandler(), CHAT_ENDPOINT)
                 .addHandler(getRestSocketHandler(), CHAT_ENDPOINT_WITH_SLASH)
-                .setAllowedOrigins("*");
+                .addHandler(getChatWebSocketHandler(), CHAT_ENDPOINT)
+                .setAllowedOrigins("*")
+                .withSockJS()
+                .setHeartbeatTime(20);
     }
 
     @Bean
